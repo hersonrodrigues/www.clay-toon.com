@@ -46,7 +46,7 @@ function Navbar({ t, lang, setLang, menuOpen, setMenuOpen }) {
   return (
     <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
       <a href="#" className="nav-logo">
-        <img src="/logo.png" alt="Claytoon Studio" />
+        <img src="/claytoon-logo-transparent.png" alt="Claytoon Studio" />
       </a>
 
       <button
@@ -98,7 +98,7 @@ function Hero({ t }) {
         <div className="blob blob-3" />
       </div>
       <div className="hero-content">
-        <img src="/logo.png" alt="Claytoon" className="hero-logo" />
+        <img src="/claytoon-logo-transparent.png" alt="Claytoon" className="hero-logo" />
         <h1 className="hero-tagline">{t.hero.tagline}</h1>
         <p className="hero-subtitle">{t.hero.subtitle}</p>
         <div className="hero-btns">
