@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { translations } from '../lib/translations';
 
 // ─── Language detection ──────────────────────────────────────────────────────
@@ -45,9 +46,9 @@ function Navbar({ t, lang, setLang, menuOpen, setMenuOpen }) {
 
   return (
     <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
-      <a href="#" className="nav-logo">
+      <Link href="/" className="nav-logo">
         <img src="/claytoon-logo-transparent.png" alt="Claytoon Studio" />
-      </a>
+      </Link>
 
       <button
         className="hamburger"
@@ -59,31 +60,32 @@ function Navbar({ t, lang, setLang, menuOpen, setMenuOpen }) {
         <span />
       </button>
 
-      <ul className={`nav-links${menuOpen ? ' open' : ''}`}>
-        <li><a href="#services" onClick={() => setMenuOpen(false)}>{t.nav.services}</a></li>
-        <li><a href="#process" onClick={() => setMenuOpen(false)}>{t.nav.portfolio}</a></li>
-        <li><a href="#why" onClick={() => setMenuOpen(false)}>{t.nav.about}</a></li>
-        <li><a href="#contact" onClick={() => setMenuOpen(false)}>{t.nav.contact}</a></li>
-      </ul>
+      <div className={`nav-menu${menuOpen ? ' open' : ''}`}>
+        <ul className="nav-links">
+          <li><Link href="/#services" onClick={() => setMenuOpen(false)}>{t.nav.services}</Link></li>
+          <li><Link href="/portfolio" onClick={() => setMenuOpen(false)}>{t.nav.portfolio}</Link></li>
+          <li><Link href="/#why" onClick={() => setMenuOpen(false)}>{t.nav.about}</Link></li>
+        </ul>
 
-      <div className={`nav-right${menuOpen ? ' open' : ''} nav-cta-wrap`}>
-        <div className="lang-toggle">
-          <button
-            className={`lang-btn${lang === 'en' ? ' active' : ''}`}
-            onClick={() => setLang('en')}
-          >
-            EN
-          </button>
-          <button
-            className={`lang-btn${lang === 'pt' ? ' active' : ''}`}
-            onClick={() => setLang('pt')}
-          >
-            PT
-          </button>
+        <div className="nav-right nav-cta-wrap">
+          <div className="lang-toggle">
+            <button
+              className={`lang-btn${lang === 'en' ? ' active' : ''}`}
+              onClick={() => setLang('en')}
+            >
+              EN
+            </button>
+            <button
+              className={`lang-btn${lang === 'pt' ? ' active' : ''}`}
+              onClick={() => setLang('pt')}
+            >
+              PT
+            </button>
+          </div>
+          <Link href="/#quote" className="nav-links a nav-cta" onClick={() => setMenuOpen(false)}>
+            {t.nav.getQuote}
+          </Link>
         </div>
-        <a href="#quote" className="nav-links a nav-cta" onClick={() => setMenuOpen(false)}>
-          {t.nav.getQuote}
-        </a>
       </div>
     </nav>
   );
@@ -103,10 +105,10 @@ function Hero({ t }) {
         <p className="hero-subtitle">{t.hero.subtitle}</p>
         <div className="hero-btns">
           <a href="#quote" className="btn-primary">
-            ✨ {t.hero.cta}
+            <i className="fa-solid fa-rocket" style={{ marginRight: 8 }}></i> {t.hero.cta}
           </a>
           <a href="#services" className="btn-secondary">
-            {t.hero.ctaSecondary} →
+            {t.hero.ctaSecondary} <i className="fa-solid fa-arrow-right" style={{ marginLeft: 6 }}></i>
           </a>
         </div>
       </div>
@@ -122,7 +124,7 @@ function Services({ t }) {
       <div className="services-grid">
         {t.services.items.map((s, i) => (
           <div key={i} className="service-card reveal" style={{ transitionDelay: `${i * 0.12}s` }}>
-            <span className="service-emoji">{s.emoji}</span>
+            <span className="service-icon"><i className={s.icon}></i></span>
             <span className="service-tag">{s.tag}</span>
             <h3 className="service-title">{s.title}</h3>
             <p className="service-desc">{s.desc}</p>
@@ -157,7 +159,7 @@ function Why({ t }) {
       <div className="why-grid">
         {t.why.items.map((item, i) => (
           <div key={i} className="why-card reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-            <span className="why-icon">{item.icon}</span>
+            <span className="why-icon"><i className={item.icon}></i></span>
             <h3>{item.title}</h3>
             <p>{item.desc}</p>
           </div>
@@ -273,36 +275,15 @@ function QuoteForm({ t }) {
   );
 }
 
-function ContactStrip({ t }) {
-  const c = t.contact;
-  return (
-    <div className="contact-strip" id="contact">
-      <h2 className="section-title" style={{ marginBottom: 32 }}>{c.title}</h2>
-      <div className="contact-items">
-        <div className="contact-item">
-          <span style={{ fontSize: '1.4rem' }}>✉️</span>
-          <a href={`mailto:${c.email}`}>{c.email}</a>
-        </div>
-        <div className="contact-item">
-          <span style={{ fontSize: '1.4rem' }}>📞</span>
-          <a href={`tel:${c.phone.replace(/\s/g, '')}`}>{c.phone}</a>
-        </div>
-        <div className="contact-item">
-          <span style={{ fontSize: '1.4rem' }}>📍</span>
-          <span>{c.location}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function Footer({ t }) {
   const f = t.footer;
+  const currentYear = new Date().getFullYear();
+  const copyText = f.copy.replace("2025", currentYear);
   return (
     <footer>
       <p><strong>Claytoon Studio</strong></p>
       <p>{f.tagline}</p>
-      <p style={{ marginTop: 8 }}>{f.copy}</p>
+      <p style={{ marginTop: 8 }}>{copyText}</p>
     </footer>
   );
 }
@@ -326,6 +307,13 @@ export default function Home() {
       <Head>
         <title>Claytoon Studio — {lang === 'pt' ? 'Animação & Vídeos' : 'Animation & Video'}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
       </Head>
 
       <Navbar
@@ -341,7 +329,6 @@ export default function Home() {
       <Process t={t} />
       <Why t={t} />
       <QuoteForm t={t} />
-      <ContactStrip t={t} />
       <Footer t={t} />
     </>
   );
